@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adx-event-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adx-event-producer
+  template:
+    metadata:
+      labels:
+        app: adx-event-producer
+    spec:
+      containers:
+        - name: adx-event-producer
+          image: abhirockzz/adx-event-producer
+          imagePullPolicy: Always
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: my-kafka-cluster-kafka-bootstrap:9092
+            - name: KAFKA_TOPIC
+              value: storm-events
+            - name: SOURCE_FILE
+              value: StormEvents.csv

@@ -1,0 +1,20 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  name: adx-sink-connector
+  labels:
+    strimzi.io/cluster: my-connect-cluster
+spec:
+  class: com.microsoft.azure.kusto.kafka.connect.sink.KustoSinkConnector
+  tasksMax: 3
+  config:
+    topics: storm-events
+    flush.size.bytes: 10000
+    flush.interval.ms: 50000
+    kusto.tables.topics.mapping: "[{'topic': 'storm-events','db': 'testkustodb', 'table': 'Storms','format': 'csv', 'mapping':'Storms_CSV_Mapping'}]"
+    kusto.url: ${file:/opt/kafka/external-configuration/adx-auth-config/adx-auth.properties:kustoURL}
+    aad.auth.authority: ${file:/opt/kafka/external-configuration/adx-auth-config/adx-auth.properties:tenantID}
+    aad.auth.appid: ${file:/opt/kafka/external-configuration/adx-auth-config/adx-auth.properties:appID}
+    aad.auth.appkey: ${file:/opt/kafka/external-configuration/adx-auth-config/adx-auth.properties:password}
+    key.converter: "org.apache.kafka.connect.storage.StringConverter"
+    value.converter: "org.apache.kafka.connect.storage.StringConverter"

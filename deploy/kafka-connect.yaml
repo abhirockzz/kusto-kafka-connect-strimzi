@@ -1,0 +1,26 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnect
+metadata:
+  name: my-connect-cluster
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  image: abhirockzz/adx-connector-strimzi:1.0.1
+  version: 2.4.0
+  replicas: 1
+  bootstrapServers: my-kafka-cluster-kafka-bootstrap:9092
+  config:
+    group.id: connect-cluster
+    offset.storage.topic: strimzi-connect-cluster-offsets
+    config.storage.topic: strimzi-connect-cluster-configs
+    status.storage.topic: strimzi-connect-cluster-status
+    config.storage.replication.factor: 1
+    offset.storage.replication.factor: 1
+    status.storage.replication.factor: 1
+    config.providers: file
+    config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
+  externalConfiguration:
+    volumes:
+      - name: adx-auth-config
+        secret:
+          secretName: adx-auth

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: adx-auth
+type: Opaque
+stringData:
+  adx-auth.properties: |-
+    kustoURL: [replace]
+    tenantID: [replace]
+    appID: [replace]
+    password: [replace]
